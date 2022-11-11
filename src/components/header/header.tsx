@@ -1,5 +1,7 @@
-import { component$, useStyles$ } from '@builder.io/qwik';
+import { component$, useStyles$, $ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
+import auth from '~/routes/service/auth';
+// import auth from '../service/auth';
 
 export const navbarStyle = `
 a{
@@ -41,6 +43,10 @@ export const activeLogout = `
 export default component$(() => {
   useStyles$(navbarStyle);
 
+  const logout = $(() => {
+    auth.logout();
+  })
+
   const { pathname } = useLocation();
   if(pathname.startsWith("/login") || pathname.startsWith("/register")) useStyles$(hideMenus);
   else{
@@ -68,7 +74,7 @@ export default component$(() => {
                       <a class="nav-link" id="view_meetings" href="/view_meetings">View Meetings</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="logout" href="/login">Logout</a>
+                      <a class="nav-link" id="logout" href="/login" onClick$={logout} preventdefault:click>Logout</a>
                     </li>
                     </ul>
                 </div>
