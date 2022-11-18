@@ -1,6 +1,8 @@
 import { component$, useStore, useStyles$, $ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
 import Swal from 'sweetalert2';
+import userRepo from '../service/userRepo';
+// import auth from '../service/auth';
 import { User } from '../user';
 
 export const registerStyle = `
@@ -58,11 +60,22 @@ export default component$(() => {
       }
 
       const newUser: User = {
-        id: 0,
+        id: userRepo.getNextUserId(),
         username: state.username,
         password: state.password
       };
-      console.log(newUser);
+
+      userRepo.addUser(newUser);
+
+      Swal.fire({
+        title: 'Success',
+        text: 'Register Berhasil!',
+        icon: 'success'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          location.pathname = ('/login')
+        }
+      })
     });
     
   return (

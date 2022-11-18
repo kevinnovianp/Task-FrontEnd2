@@ -1,8 +1,7 @@
 import { component$, useStore, useStyles$, $ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
-import auth from '../service/auth';
-import { User } from '../user';
 import Swal from 'sweetalert2';
+import userRepo from '../service/userRepo';
 
 export const loginStyle = `
   table{
@@ -42,46 +41,24 @@ export default component$(() => {
         })
         return
       }
-      
-      const credential: User = {
-        id: 0,
-        username: state.username,
-        password: state.password
-      };
 
-      if (!auth.isLoggedIn()) {
-        auth
-          .login(credential)
-          .then((res) => {
-            if (res.ok) {
-              return res.json();
-            } else {
-              Swal.fire({
-                title: 'Error',
-                text: 'Invalid Credential!',
-                icon: 'error'
-              });
-            }
-          })
-          .then((token) => {
-            if (token) {
-              auth.doLoginUser(credential.username, token);
-              Swal.fire({
-                title: 'Success',
-                text: 'Login Berhasil!',
-                icon: 'success'
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  location.pathname = ("/view_meetings");
-                }
-              });
-            }
-          });
-      } else {
+      const credential = userRepo.isUserExists(state.username, state.password);
+
+      if (!credential) {
         Swal.fire({
           title: 'Error',
           text: 'Invalid Credential!',
           icon: 'error'
+        });
+      }else{
+        Swal.fire({
+          title: 'Success',
+          text: 'Login Berhasil, '+ state.username + ':' + credential.id + ' !',
+          icon: 'success'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            location.pathname = ("/view_meetings");
+          }
         });
       }
     });
