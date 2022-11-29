@@ -1,6 +1,7 @@
 import { component$, useStyles$, $ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
-import auth from '~/routes/service/auth';
+import Swal from 'sweetalert2';
+// import auth from '~/routes/service/auth';
 
 export const navbarStyle = `
 a{
@@ -17,7 +18,17 @@ export default component$(() => {
   useStyles$(navbarStyle);
 
   const logout = $(() => {
-    auth.logout();
+    localStorage.removeItem("currUserId");
+    Swal.fire({
+      title: 'Success',
+      text: 'Logout Berhasil!',
+      icon: 'success'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        location.pathname = ("/login");
+      }
+    });
+    // auth.logout();
   })
 
   const { pathname } = useLocation();

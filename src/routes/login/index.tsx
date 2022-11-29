@@ -1,6 +1,8 @@
-import { component$, useStore, useStyles$, $ } from '@builder.io/qwik';
+import { component$, useStore, useStyles$, $, useContext, useClientEffect$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
 import Swal from 'sweetalert2';
+import { UserContext } from '~/root';
+// import auth from '../service/auth';
 import userRepo from '../service/userRepo';
 
 export const loginStyle = `
@@ -20,10 +22,20 @@ export const loginStyle = `
 `;
 
 export default component$(() => {
+    const userState = useContext(UserContext)
+
+    useClientEffect$(() => {      
+      if(localStorage.getItem('users')){
+        userState.items = JSON.parse(localStorage.getItem('users')).items
+        userState.nextId = JSON.parse(localStorage.getItem('users')).nextId
+      }
+    })
+
     useStyles$(loginStyle);
     const state = useStore({username: "", password: ""});
 
     const login = $(() => {
+      if(!localStorage.getItem('users')) userRepo.initUser()
 
       if(state.username==""){
         Swal.fire({
@@ -42,7 +54,14 @@ export default component$(() => {
         return
       }
 
-      const credential = userRepo.isUserExists(state.username, state.password);
+      const credential = userState.items.find((item) => {
+        if(item.username === state.username && item.password === state.password){
+          localStorage.setItem('currUserId',JSON.stringify(item.id));
+          return true
+        }
+      })
+
+      // const credential = userRepo.isUserExists(state.username, state.password);
 
       if (!credential) {
         Swal.fire({

@@ -1,10 +1,27 @@
-import { component$, useStyles$ } from '@builder.io/qwik';
+import { $, component$, createContext, useContextProvider, useStore, useStyles$ } from '@builder.io/qwik';
 import { QwikCity, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
 import { RouterHead } from './components/router-head/router-head';
 
 import globalStyles from './global.css?inline';
+import userRepo from './routes/service/userRepo';
+
+export const UserContext = createContext('user-context')
+export const MeetingContext = createContext('meeting-context')
 
 export default component$(() => {
+  const users = useStore({
+    items: [],
+    nextId: -1
+  })
+
+  const meetings = useStore({
+    items: [],
+    nextId: -1
+  })
+
+  useContextProvider(UserContext, users)
+  useContextProvider(MeetingContext, meetings)
+
   /**
    * The root of a QwikCity site always start with the <QwikCity> component,
    * immediately followed by the document's <head> and <body>.
@@ -12,6 +29,9 @@ export default component$(() => {
    * Dont remove the `<head>` and `<body>` elements.
    */
   useStyles$(globalStyles);
+  const initUser = $(()=>{
+    userRepo.initUser()
+  });
 
   return (
     <QwikCity>
@@ -26,10 +46,11 @@ export default component$(() => {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossOrigin="anonymous"></script>
         <RouterHead />
       </head>
-      <body lang="en" style="background-color: rgba(13, 109, 253, 0.2)">
+      <body lang="en" style="background-color: rgba(13, 109, 253, 0.2)" window:onLoad$={initUser}>
         <RouterOutlet />
         <ServiceWorkerRegister />
       </body>
     </QwikCity>
   );
 });
+
