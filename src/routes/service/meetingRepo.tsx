@@ -9,7 +9,7 @@ export class meetingRepo{
         {id:5, startTime:'10:00', endTime:'11:30', date:'2022-07-14', title: 'Meet 5', desc: 'This is fifth meet', creator: 1},
         {id:6, startTime:'11:30', endTime:'16:30', date:'2022-05-13', title: 'Meet 6', desc: 'This is sixth meet', creator: 1}
     ];
-    private currMeetingId = 3;
+    private currMeetingId = 6;
 
     getcurrMeetingId(){
         this.currMeetingId++;

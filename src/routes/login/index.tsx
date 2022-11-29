@@ -53,7 +53,7 @@ export default component$(() => {
       }else{
         Swal.fire({
           title: 'Success',
-          text: 'Login Berhasil, '+ state.username + ':' + credential.id + ' !',
+          text: 'Login Berhasil!',
           icon: 'success'
         }).then((result) => {
           if (result.isConfirmed) {
