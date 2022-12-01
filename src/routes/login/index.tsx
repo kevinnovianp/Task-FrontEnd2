@@ -2,7 +2,6 @@ import { component$, useStore, useStyles$, $, useContext, useClientEffect$ } fro
 import type { DocumentHead } from '@builder.io/qwik-city';
 import Swal from 'sweetalert2';
 import { UserContext } from '~/root';
-// import auth from '../service/auth';
 import userRepo from '../service/userRepo';
 
 export const loginStyle = `
@@ -26,7 +25,7 @@ export default component$(() => {
 
     useClientEffect$(() => {      
       if(localStorage.getItem('users')){
-        userState.items = JSON.parse(localStorage.getItem('users')).items
+        userState.items = [...JSON.parse(localStorage.getItem('users')).items]
         userState.nextId = JSON.parse(localStorage.getItem('users')).nextId
       }
     })
@@ -35,7 +34,7 @@ export default component$(() => {
     const state = useStore({username: "", password: ""});
 
     const login = $(() => {
-      if(!localStorage.getItem('users')) userRepo.initUser()
+      userRepo.initUser()
 
       if(state.username==""){
         Swal.fire({
@@ -60,8 +59,6 @@ export default component$(() => {
           return true
         }
       })
-
-      // const credential = userRepo.isUserExists(state.username, state.password);
 
       if (!credential) {
         Swal.fire({

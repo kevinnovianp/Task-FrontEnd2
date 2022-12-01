@@ -1,7 +1,6 @@
 import { component$, useStyles$, $ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Swal from 'sweetalert2';
-// import auth from '~/routes/service/auth';
 
 export const navbarStyle = `
 a{
@@ -28,7 +27,6 @@ export default component$(() => {
         location.pathname = ("/login");
       }
     });
-    // auth.logout();
   })
 
   const { pathname } = useLocation();

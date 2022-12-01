@@ -1,8 +1,8 @@
-import { component$, useStore, useStyles$, $ } from '@builder.io/qwik';
+import { component$, useStore, useStyles$, $, useContext, useClientEffect$, useWatch$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
 import Swal from 'sweetalert2';
+import { UserContext } from '~/root';
 import userRepo from '../service/userRepo';
-// import auth from '../service/auth';
 import { User } from '../user';
 
 export const registerStyle = `
@@ -22,10 +22,25 @@ tr{
 `
 
 export default component$(() => {
+  const userState = useContext(UserContext)
+
+  useClientEffect$(() => {      
+    if(localStorage.getItem('users')){
+      userState.items = [...JSON.parse(localStorage.getItem('users')).items]
+      userState.nextId = JSON.parse(localStorage.getItem('users')).nextId
+    }
+  })
+
   useStyles$(registerStyle);
-  const state = useStore({username: "", password: "", confirmPassword: ""});
+    const state = useStore({
+      username: "",
+      password: "",
+      confirmPassword: ""
+    });
 
     const register = $(() => {
+      userRepo.initUser()
+
       if(state.username==""){
         Swal.fire({
           title: 'Error',
@@ -60,12 +75,17 @@ export default component$(() => {
       }
 
       const newUser: User = {
-        id: userRepo.getNextUserId(),
+        id: userState.nextId,
         username: state.username,
         password: state.password
       };
-
-      userRepo.addUser(newUser);
+      
+      userState.items = [...JSON.parse(localStorage.getItem('users')).items]
+      userState.nextId = JSON.parse(localStorage.getItem('users')).nextId
+      userState.items.push(newUser)
+      userState.nextId = userState.nextId+1
+      localStorage.setItem('users',JSON.stringify(userState));
+      console.log(userState)
 
       Swal.fire({
         title: 'Success',
