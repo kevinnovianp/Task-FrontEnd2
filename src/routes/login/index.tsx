@@ -3,6 +3,7 @@ import type { DocumentHead } from '@builder.io/qwik-city';
 import Swal from 'sweetalert2';
 import { UserContext } from '~/root';
 import userRepo from '../service/userRepo';
+import meetingRepo from '../service/meetingRepo';
 
 export const loginStyle = `
   table{
@@ -73,6 +74,7 @@ export default component$(() => {
           icon: 'success'
         }).then((result) => {
           if (result.isConfirmed) {
+            meetingRepo.initMeeting()
             location.pathname = ("/view_meetings");
           }
         });

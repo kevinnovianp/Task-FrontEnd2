@@ -63,5 +63,5 @@ export default component$(() => {
 });
 
 export const Logo = () => (
-  <img src="http://127.0.0.1:5173/images/logo.png" alt="" class="" style="height: 2.2rem;"></img>
+  <img src="/images/logo.png" alt="" class="" style="height: 2.2rem;"></img>
 );
