@@ -85,7 +85,6 @@ export default component$(() => {
       userState.items.push(newUser)
       userState.nextId = userState.nextId+1
       localStorage.setItem('users',JSON.stringify(userState));
-      console.log(userState)
 
       Swal.fire({
         title: 'Success',
