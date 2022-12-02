@@ -58,10 +58,11 @@ export default component$(() => {
   })
 
   const searchMeeting = $((key: string) => {
-    if(key=="") state.meetings = meetingState.items.filter(m => m.creator == state.currUserId)
+    state.query = key
+    if(key=="") return
     else{
-      state.meetings = meetingState.items.filter(m => m.id.toString().toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || m.title?.toLowerCase().indexOf(key.toLowerCase()) !== -1)
+      state.userMeetings.items.filter((m => m.id.toString().toLowerCase().indexOf(key.toLowerCase()) != -1
+      || m.title.toLowerCase().indexOf(key.toLowerCase()) != -1) && m.creator == state.currUserId)
     }
     sorting(state.selectedSort)
   })
@@ -112,12 +113,12 @@ export default component$(() => {
                 <span class="input-group-text">
                   <img src="/images/lens.png" alt="" style="height:1rem; width:1rem" />
                 </span>
-                <input type="search" style="text-overflow: ellipsis; width: 20vw" name="key" id="searchName"
+                <input type="search" style="text-overflow: ellipsis; width: 20vw" name="query" id="searchName" value={state.query}
                   onInput$={(event) => {
                     const input = event.target as HTMLInputElement;
                     state.query = input.value;
-                  }}
-                  class="form-control input-group mr-sm-2 p-1 px-2" placeholder="Input meeting's id or title" required />
+                  }} onChange$={()=> {searchMeeting(state.query)}}
+                  class="form-control input-group mr-sm-2 p-1 px-2" placeholder="Input meeting's id or title" />
               </div>
             </form>
             <div class="btn-group">
