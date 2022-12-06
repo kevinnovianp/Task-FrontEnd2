@@ -84,6 +84,11 @@ export default component$(() => {
     return nt
   })
 
+  const updateMeeting = $((id) => {
+    localStorage.setItem('updateMeetingId',JSON.stringify(id));
+    location.pathname+=("/update")
+  })
+
   const deleteMeeting = $((id) => {
     Swal.fire({
       title: 'Success',
@@ -181,7 +186,8 @@ export default component$(() => {
                               </tr>
                             </table>
                             <div class="container-fluid d-flex justify-content-end" style="width: 100%;">
-                              <button class="btn btn-success btn-sm ms-2" type="button">
+                              <button class="btn btn-success btn-sm ms-2" type="button"
+                              onClick$={() => updateMeeting(m.id)}>
                                 Update
                               </button>
                               <button class="btn btn-danger btn-sm ms-2" type="button"
