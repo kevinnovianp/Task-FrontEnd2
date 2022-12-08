@@ -19,8 +19,7 @@ export default component$(() => {
     meetings: [],
     userMeetings: [],
     length: 0,
-    selectedSort: "oldest",
-    query: ""
+    selectedSort: "oldest"
   })
 
   useWatch$(({track}) => {
@@ -31,8 +30,11 @@ export default component$(() => {
   })
 
   const initMeeting = $(()=>{
-    if(state.currUserId==-1) state.currUserId = JSON.parse(localStorage.getItem('currUserId'))
-    meetingRepo.initMeeting()
+    if(localStorage.getItem('currUserId')){
+      if(state.currUserId==-1) state.currUserId = JSON.parse(localStorage.getItem('currUserId'))
+      meetingRepo.initMeeting()
+    }
+    else location.pathname = ("/login");
   });
 
   const sorting = $((key: string) => {
@@ -55,16 +57,6 @@ export default component$(() => {
         break;
       }
     }
-  })
-
-  const searchMeeting = $((key: string) => {
-    state.query = key
-    if(key=="") return
-    else{
-      state.userMeetings.items.filter((m => m.id.toString().toLowerCase().indexOf(key.toLowerCase()) != -1
-      || m.title.toLowerCase().indexOf(key.toLowerCase()) != -1) && m.creator == state.currUserId)
-    }
-    sorting(state.selectedSort)
   })
 
   const month=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -113,19 +105,6 @@ export default component$(() => {
       <div class="container-fluid p-0" window:onLoad$={initMeeting}>
         <div class="container-fluid p-2 px-4 mt-3 d-flex justify-content-end align-items-center" style="width: 100%;">
           <div class="d-flex justify-content-end align-items-center">
-            <form class="mt-0 me-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">
-                  <img src="/images/lens.png" alt="" style="height:1rem; width:1rem" />
-                </span>
-                <input type="search" style="text-overflow: ellipsis; width: 20vw" name="query" id="searchName" value={state.query}
-                  onInput$={(event) => {
-                    const input = event.target as HTMLInputElement;
-                    state.query = input.value;
-                  }} onChange$={()=> {searchMeeting(state.query)}}
-                  class="form-control input-group mr-sm-2 p-1 px-2" placeholder="Input meeting's id or title" />
-              </div>
-            </form>
             <div class="btn-group">
               <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: var(--bca);">
                 Sort by

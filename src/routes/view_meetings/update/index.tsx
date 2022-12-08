@@ -56,6 +56,11 @@ export default component$(() => {
         }
     })
 
+    const isLoggedIn = $(() => {
+        if(localStorage.getItem('currUserId')) return;
+        else location.pathname = ("/login");
+    })
+
     const update = $(() => {
         if(!state.title){
             Swal.fire({
@@ -121,7 +126,7 @@ export default component$(() => {
 
     return (
         <>
-            <div class="container-fluid p-0">
+            <div class="container-fluid p-0" window:onLoad$={isLoggedIn}>
                 <div class="d-flex justify-content-center m-4">
                 <div class="card p-3 pt-4 pb-4 shadow bg-body rounded-2 d-flex align-items-center mb-4" style="width: 90vw;">
                     <form class="px-3" method='post' onSubmit$={update} preventdefault:submit>

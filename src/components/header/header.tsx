@@ -18,6 +18,7 @@ export default component$(() => {
 
   const logout = $(() => {
     localStorage.removeItem("currUserId");
+    localStorage.removeItem("updateMeetingId");
     Swal.fire({
       title: 'Success',
       text: 'Logout Berhasil!',
